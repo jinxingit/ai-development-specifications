@@ -42,27 +42,28 @@ Transform AI-assisted development from unpredictable "vibe coding" into systemat
 This repository contains four comprehensive specifications that work together to create a complete AI-assisted development framework:
 
 ```
-    ┌─────────────────┐    ┌─────────────────┐
-    │  Specification  │    │     Context     │
-    │    as Code      │────│  Engineering    │
-    │   (What to build)│    │ (How to inform) │
-    └─────────────────┘    └─────────────────┘
-            │                        │
-            │                        │
-            ▼                        ▼
-    ┌─────────────────┐    ┌─────────────────┐
-    │    Testing      │    │ Documentation   │
-    │    as Code      │    │    as Code      │
-    │ (How to validate)│    │ (How to explain)│
-    └─────────────────┘    └─────────────────┘
-            │
-            │
-            ▼
-    ┌─────────────────┐
-    │ Coding Practices│
-    │    as Code      │
-    │ (How to build)  │
-    └─────────────────┘
+                    ┌─────────────────┐
+                    │  Specification  │
+                    │    as Code      │
+                    │   (What to build)│
+                    └─────────┬───────┘
+                              │
+                              ▼
+                    ┌─────────────────┐
+                    │     Context     │
+                    │  Engineering    │
+                    │ (How to inform) │
+                    └─────────┬───────┘
+                              │
+                              ▼
+        ┌─────────────────────┼─────────────────────┐
+        │                     │                     │
+        ▼                     ▼                     ▼
+┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
+│ Coding Practices│ │    Testing      │ │ Documentation   │
+│    as Code      │ │    as Code      │ │    as Code      │
+│ (How to build)  │ │ (How to validate)│ │ (How to explain)│
+└─────────────────┘ └─────────────────┘ └─────────────────┘
 ```
 
 ### [Specification as Code](./Specification-as-Code.txt)
