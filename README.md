@@ -43,6 +43,13 @@ This repository contains five comprehensive specifications that work together to
 
 ```
                     ┌─────────────────┐
+                    │     Product     │
+                    │   Requirements  │
+                    │     Document    │
+                    └─────────┬───────┘
+                              │
+                              ▼ 
+                    ┌─────────────────┐
                     │  Specification  │
                     │    as Code      │
                     │ (What to build) │
