@@ -1,0 +1,189 @@
+# ===================================================================
+# Specification as Code:
+# This document is the single source of truth for the project.
+# It defines all requirements, architecture, tasks, and validation.
+# ===================================================================
+
+[environment]
+# --- Defines the non-negotiable target environment for v1.0.
+# --- The BuildEngine MUST verify this before executing any tasks.
+target_os = "linux-x86_64"
+os_details = "Ubuntu 24.04 LTS or compatible"
+language = "rust"
+language_version = "1.78"
+build_tools = ["rustup", "cargo", "clippy"]
+external_dependencies = ["ollama_v0.1.33+"]
+
+# ===================================================================
+# STAGE DEFINITIONS
+# Defines the high-level phases of the build process.
+# ===================================================================
+
+DEFINE_STAGE(setup_and_config)
+DEFINE_STAGE(core_backend_actors)
+DEFINE_STAGE(orchestration_logic)
+DEFINE_STAGE(frontend_ui_shell)
+DEFINE_STAGE(ipc_and_integration)
+DEFINE_STAGE(final_validation)
+
+# ===================================================================
+# TASK DEFINITIONS
+# The complete, ordered recipe for building The Foundry.
+# ===================================================================
+
+# --- Stage 1: Setup & Configuration ---
+
+TASK "Create Workspace and Crate Structure" {
+  [manifest] {
+    task_type = "FileSystemSetup",
+    failure_strategy = "Halt"
+  }
+  id: setup-workspace
+  stage: setup_and_config
+  description: "Create a new Rust workspace with a Tauri project structure: `/src` for backend, `/ui` for frontend, `/src-tauri` for config."
+}
+
+TASK "Implement Configuration Module" {
+  [manifest] {
+    target_file = "src/config.rs",
+    task_type = "CodeGeneration",
+    failure_strategy = "SequentialDebug"
+  }
+  id: implement-config
+  stage: setup_and_config
+  depends: [setup-workspace]
+  description: "Implement a `Settings` struct using the `figment` crate. It must parse `Foundry.toml` and allow environment variable overrides for all keys."
+}
+
+# --- Stage 2: Core Backend Actors ---
+
+TASK "Implement CoderBee Actor" {
+  [manifest] {
+    target_file = "src/actors/coder_bee.rs",
+    task_type = "CodeGeneration",
+    llm_dependency = { model: "llama3:8b-instruct", temp: 0.0, seed: 42 }
+  }
+  id: implement-coder-bee
+  stage: core_backend_actors
+  depends: [implement-config]
+  description: "Create a Tokio/MPSC actor that receives a prompt, calls the configured Ollama endpoint via a `reqwest` client with a 120s timeout, and returns the generated code string."
+}
+
+TASK "Implement ValidationBee Actors" {
+  [manifest] {
+    target_file = "src/actors/validation_bees.rs",
+    task_type = "CodeGeneration"
+  }
+  id: implement-validation-bees
+  stage: core_backend_actors
+  depends: [setup-workspace]
+  description: "Create two actors: `LintingBee` (runs `cargo clippy --message-format=json`) and `TestExecutionBee` (runs `cargo test`). Both must use `std::process::Command` and capture the full stdout, stderr, and exit code."
+}
+
+# --- Stage 3: Orchestration Logic ---
+
+TASK "Implement Spec Compiler" {
+  [manifest] {
+    target_file = "src/engine/spec_compiler.rs",
+    task_type = "CodeGeneration"
+  }
+  id: implement-spec-compiler
+  stage: orchestration_logic
+  depends: [setup-workspace]
+  description: "Implement the `compile_spec` function. It must use `pulldown-cmark` to parse Markdown task lists and `petgraph` to build a dependency graph. It MUST detect and fail on circular dependencies."
+}
+
+TASK "Implement BuildEngine Actor" {
+  [manifest] {
+    target_file = "src/engine/build_engine.rs",
+    task_type = "CodeGeneration",
+    failure_strategy = "SequentialDebug"
+  }
+  id: implement-build-engine
+  stage: orchestration_logic
+  depends: [implement-spec-compiler, implement-coder-bee, implement-validation-bees]
+  description: "Implement the main orchestrator actor. It must load the spec, manage the `petgraph` state, and execute the full 'Code -> Lint -> Test -> Fix -> Repeat' workflow, including the 'one retry' logic with `git restore` on failure."
+}
+
+# --- Stage 4: Frontend UI Shell ---
+
+TASK "Create Tauri Project & Basic Layout" {
+  [manifest] {
+    target_file = "ui/index.html",
+    task_type = "CodeGeneration"
+  }
+  id: create-ui-layout
+  stage: frontend_ui_shell
+  depends: [setup-workspace]
+  description: "Initialize the SvelteKit project in the `/ui` directory. Create the main HTML file with the four-panel grid layout."
+}
+
+TASK "Implement Task Graph Visualization" {
+  [manifest] {
+    target_file = "ui/src/components/TaskGraph.svelte",
+    task_type = "CodeGeneration"
+  }
+  id: implement-task-graph
+  stage: frontend_ui_shell
+  depends: [create-ui-layout]
+  description: "Create a Svelte component that integrates Mermaid.js. It must be able to receive a Mermaid graph definition string and render it."
+}
+
+TASK "Integrate Monaco Editor" {
+  [manifest] {
+    target_file = "ui/src/components/Editor.svelte",
+    task_type = "CodeGeneration"
+  }
+  id: implement-editor
+  stage: frontend_ui_shell
+  depends: [create-ui-layout]
+  description: "Create a Svelte component that wraps and initializes the Monaco Editor."
+}
+
+# --- Stage 5: IPC and Integration ---
+
+TASK "Implement Backend Tauri Commands & Events" {
+  [manifest] {
+    target_file = "src/ipc.rs",
+    task_type = "CodeGeneration"
+  }
+  id: implement-backend-ipc
+  stage: ipc_and_integration
+  depends: [implement-build-engine]
+  description: "Define the `#[tauri::command]` for `start_build` and the event emitter for `task-status-update`. The start_build command must dispatch a job to the BuildEngine."
+}
+
+TASK "Implement Frontend IPC Client" {
+  [manifest] {
+    target_file = "ui/src/lib/ipc.js",
+    task_type = "CodeGeneration"
+  }
+  id: implement-frontend-ipc
+  stage: ipc_and_integration
+  depends: [create-ui-layout]
+  description: "Create a JavaScript module that uses Tauri's API to `invoke` backend commands and `listen` for backend events. This module will update a global Svelte store for the task graph state."
+}
+
+# --- Stage 6: Final Validation ---
+
+TASK "Full System Integration Test" {
+  [manifest] {
+    task_type = "Testing",
+    failure_strategy = "Halt"
+  }
+  id: integration-test
+  stage: final_validation
+  depends: [implement-backend-ipc, implement-frontend-ipc]
+  description: "Create an end-to-end test. The test will programmatically create a sample PRD, invoke the `start_build` command, listen for a `PROJECT_COMPLETE` event, and verify the final generated files are correct."
+}
+
+TASK "Architectural Conformance Verification" {
+  [manifest] {
+    task_type = "Verification",
+    failure_strategy = "Halt"
+  }
+  id: conformance-test
+  stage: final_validation
+  depends: [integration-test]
+  description: "Execute the 'Backward Pass.' Use an ArchitectBee to generate a new PRD from the completed code. Use a DiffBee to semantically compare the generated PRD against the original PRD. The build is only considered successful if they are identical."
+}
