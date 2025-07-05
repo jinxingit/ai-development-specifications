@@ -45,7 +45,7 @@ This repository contains four comprehensive specifications that work together to
                     ┌─────────────────┐
                     │  Specification  │
                     │    as Code      │
-                    │   (What to build)│
+                    │ (What to build) │
                     └─────────┬───────┘
                               │
                               ▼
@@ -62,7 +62,7 @@ This repository contains four comprehensive specifications that work together to
 ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
 │ Coding Practices│ │    Testing      │ │ Documentation   │
 │    as Code      │ │    as Code      │ │    as Code      │
-│ (How to build)  │ │ (How to validate)│ │ (How to explain)│
+│ (How to build)  │ │(How to validate)│ │ (How to explain)│
 └─────────────────┘ └─────────────────┘ └─────────────────┘
 ```
 
