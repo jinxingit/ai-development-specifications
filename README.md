@@ -37,7 +37,7 @@ Transform AI-assisted development from unpredictable "vibe coding" into systemat
 
 ---
 
-## The Five Pillars
+## The Six Pillars
 
 This repository contains five comprehensive specifications that work together to create a complete AI-assisted development framework:
 
@@ -120,15 +120,17 @@ This repository contains five comprehensive specifications that work together to
 ## Getting Started
 
 ### Quick Start (5 minutes)
-1. **Start here**: Read [Specification as Code](./Specification-as-Code.txt) for the foundational concepts
-2. **Solve AI issues**: Review [Context Engineering as Code](./Context-Engineering-as-Code.txt) and [Coding Best Practices as Code](./Coding-Best-Practices-as-Code.txt) to fix AI inconsistencies and to ensure AI follows best practices in coding
-3. **Pick your focus**: Choose [Testing](./Testing-as-Code.txt) or [Documentation](./Documentation-as-Code.txt) based on your immediate needs
+1. **Start here**: Read [Product Requirements Document Template](./Product-Requirements-Document-Template.txt) to define your product
+2. **Move on to**: Read [Specification as Code](./Specification-as-Code.txt) for the foundational concepts
+3. **Solve AI issues**: Review [Context Engineering as Code](./Context-Engineering-as-Code.txt) and [Coding Best Practices as Code](./Coding-Best-Practices-as-Code.txt) to fix AI inconsistencies and to ensure AI follows best practices in coding
+4. **Pick your focus**: Choose [Testing](./Testing-as-Code.txt) or [Documentation](./Documentation-as-Code.txt) based on your immediate needs
 
 ### Full Implementation (Recommended)
-1. **Foundation**: Implement Specification as Code practices
-2. **AI Enhancement**: Add Context Engineering for AI reliability
-3. **Quality Assurance**: Integrate Testing as Code strategies
-4. **Knowledge Management**: Establish Documentation as Code practices
+1. **Required**: Define your product
+2. **Foundation**: Implement Specification as Code practices
+3. **AI Enhancement**: Add Context Engineering for AI reliability
+4. **Quality Assurance**: Integrate Testing as Code strategies
+5. **Knowledge Management**: Establish Documentation as Code practices
 
 ### Prerequisites
 - Experience with software development and CI/CD
