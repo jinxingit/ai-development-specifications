@@ -73,6 +73,13 @@ This repository contains five comprehensive specifications that work together to
 └─────────────────┘ └─────────────────┘ └─────────────────┘
 ```
 
+### [Product Requirements Document](./Product-Requirements-Document-Template.txt)
+**The Source**: The project-specific input document that drives the development system
+- Feeds into the specifications
+- Drives the context engineering  
+- Activates the build pipeline
+- **Required**: The non-negotiable requirement for the entire AI development system
+  
 ### [Specification as Code](./Specification-as-Code.txt)
 **The Foundation**: Systematic approach to defining software requirements
 - Complete build pipeline specifications
