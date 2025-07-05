@@ -26,7 +26,7 @@ Transform AI-assisted development from unpredictable "vibe coding" into systemat
 
 ## Before vs After
 
-| Before (Vibe Coding) | After (Spec-Driven) |
+| Before (Spec-Driven) | After (Spec-Driven) |
 |---------------------|---------------------|
 | ❌ Inconsistent AI results | ✅ Predictable, reliable outcomes |
 | ❌ Trial and error approach | ✅ Systematic, repeatable processes |
@@ -39,7 +39,7 @@ Transform AI-assisted development from unpredictable "vibe coding" into systemat
 
 ## The Five Pillars
 
-This repository contains four comprehensive specifications that work together to create a complete AI-assisted development framework:
+This repository contains five comprehensive specifications that work together to create a complete AI-assisted development framework:
 
 ```
                     ┌─────────────────┐
@@ -149,7 +149,7 @@ This work builds on and extends several key areas:
 - **Quality engineering** practices and test automation
 
 ### **AI Development Research**
-- Context Engineering principles from [Tobi Lutke](https://x.com/tobi) and the broader AI community
+- Context Engineering principles from [Andrej Karpathy](https://x.com/karpathy) and [Tobi Lutke](https://x.com/tobi)
 - Systematic prompt engineering and AI workflow optimization
 - Human-AI collaboration patterns in software development
 
