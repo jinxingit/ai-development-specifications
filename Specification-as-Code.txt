@@ -1,0 +1,118 @@
+# ===================================================================
+# Specification as Code: Universal Template
+# This document is the single source of truth for the project.
+# It defines all requirements, architecture, tasks, and validation.
+# ===================================================================
+
+[environment]
+# --- Defines the non-negotiable target environment for the project.
+# --- The BuildEngine MUST verify this before executing any tasks.
+target_os = "your_target_os"                    # e.g., "linux-x86_64", "windows", "macos"
+os_details = "specific_os_requirements"         # e.g., "Ubuntu 24.04 LTS or compatible"
+language = "your_language"                      # e.g., "rust", "python", "javascript", "java"
+language_version = "version_number"             # e.g., "1.78", "3.11", "18", "17"
+build_tools = ["tool1", "tool2", "tool3"]       # e.g., ["rustup", "cargo", "clippy"]
+external_dependencies = ["dependency1+"]        # e.g., ["postgres_v14+", "redis_v6+"]
+
+# ===================================================================
+# STAGE DEFINITIONS
+# Defines the high-level phases of the build process.
+# ===================================================================
+
+DEFINE_STAGE(setup_and_config)
+DEFINE_STAGE(implementation)
+DEFINE_STAGE(integration)
+DEFINE_STAGE(testing)
+DEFINE_STAGE(final_validation)
+
+# ===================================================================
+# TASK DEFINITIONS
+# The complete, ordered recipe for building your project.
+# ===================================================================
+
+# --- Stage 1: Setup & Configuration ---
+
+TASK "Project Setup Task" {
+  [manifest] {
+    task_type = "FileSystemSetup",
+    failure_strategy = "Halt"
+  }
+  id: setup-project
+  stage: setup_and_config
+  description: "Description of what this task accomplishes for project setup."
+}
+
+TASK "Configuration Task" {
+  [manifest] {
+    target_file = "path/to/config/file",
+    task_type = "CodeGeneration",
+    failure_strategy = "SequentialDebug"
+  }
+  id: implement-config
+  stage: setup_and_config
+  depends: [setup-project]
+  description: "Description of configuration implementation requirements."
+}
+
+# --- Stage 2: Implementation ---
+
+TASK "Core Implementation Task" {
+  [manifest] {
+    target_file = "path/to/main/implementation",
+    task_type = "CodeGeneration"
+  }
+  id: implement-core
+  stage: implementation
+  depends: [implement-config]
+  description: "Description of core functionality to implement."
+}
+
+TASK "Supporting Implementation Task" {
+  [manifest] {
+    target_file = "path/to/supporting/code",
+    task_type = "CodeGeneration"
+  }
+  id: implement-supporting
+  stage: implementation
+  depends: [implement-core]
+  description: "Description of supporting functionality to implement."
+}
+
+# --- Stage 3: Integration ---
+
+TASK "Integration Task" {
+  [manifest] {
+    target_file = "path/to/integration/code",
+    task_type = "CodeGeneration"
+  }
+  id: implement-integration
+  stage: integration
+  depends: [implement-core, implement-supporting]
+  description: "Description of integration requirements."
+}
+
+# --- Stage 4: Testing ---
+
+TASK "Testing Implementation" {
+  [manifest] {
+    task_type = "Testing",
+    failure_strategy = "SequentialDebug"
+  }
+  id: implement-tests
+  stage: testing
+  depends: [implement-integration]
+  description: "Description of testing requirements and validation."
+}
+
+# --- Stage 5: Final Validation ---
+
+TASK "System Validation" {
+  [manifest] {
+    task_type = "Verification",
+    failure_strategy = "Halt"
+  }
+  id: final-validation
+  stage: final_validation
+  depends: [implement-tests]
+  description: "Description of final system validation and acceptance criteria."
+}
